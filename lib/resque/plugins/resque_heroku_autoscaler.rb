@@ -6,6 +6,7 @@ module Resque
       @@heroku_client = nil
 
       def after_enqueue_scale_workers_up(*args)
+        puts "SET WORKERS TO: #{Resque::Plugins::HerokuAutoscaler::Config.new_worker_count(Resque.info[:pending])}"
         set_workers(Resque::Plugins::HerokuAutoscaler::Config.new_worker_count(Resque.info[:pending]))
       end
 
@@ -19,7 +20,8 @@ module Resque
         end
       end
 
-      def current_workers        
+      def current_workers
+        puts "CURRENT_WORKERS: #{heroku_client.info(Resque::Plugins::HerokuAutoscaler::Config.heroku_app)[:workers].to_i}"        
         heroku_client.info(Resque::Plugins::HerokuAutoscaler::Config.heroku_app)[:workers].to_i
       end
 
