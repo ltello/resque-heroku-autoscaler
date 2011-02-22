@@ -11,6 +11,7 @@ module Resque
       end
 
       def after_perform_scale_workers_down(*args)
+        puts "PENDING: #{Resque.info[:pending]} - SET WORKERS TO: #{Resque::Plugins::HerokuAutoscaler::Config.new_worker_count(Resque.info[:pending])}"
         set_workers(Resque::Plugins::HerokuAutoscaler::Config.new_worker_count(Resque.info[:pending]))
       end
 
